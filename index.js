@@ -4,6 +4,8 @@
 var express = require("express");
 var morgan = require("morgan");
 var cors = require("cors");
+require('dotenv').config()
+
 
 // Own modules
 var EventSearch = require("facebook-events-by-location-core");
@@ -117,6 +119,7 @@ app.get("/events", cors(corsOptions), function(req, res) {
 
         // Instantiate EventSearch
         var es = new EventSearch();
+        console.log('************')
 
         // Search and handle results
         es.search(options).then(function (events) {
@@ -124,7 +127,7 @@ app.get("/events", cors(corsOptions), function(req, res) {
         }).catch(function (error) {
             res.status(500).json(error);
         });
-        
+
     }
 
 });
