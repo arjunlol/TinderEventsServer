@@ -2,6 +2,7 @@
 
 // NPM modules
 var express = require("express");
+const SocketServer = require('ws').Server;
 var morgan = require("morgan");
 var cors = require("cors");
 require('dotenv').config()
@@ -141,3 +142,25 @@ app.get("/health", function(req, res) {
 var server = app.listen(app.get("port"), app.get("host"), function() {
     console.log("Express server listening on port " + server.address().port + " on " + server.address().address);
 });
+
+// set up websockets
+const wss = new SocketServer({ server });
+
+
+wss.on('connection', (client, req) => {
+    const broadcast = (msg) => {
+      console.log(msg)
+      wss.clients.forEach((c) => {
+        if(c != client) {
+          c.send(msg);
+        }
+      })
+    }
+    console.log('client connected')
+    client.on('message', (msg) => {
+        broadcast(msg)
+    })
+})
+
+
+
